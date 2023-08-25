@@ -41,9 +41,9 @@ configurations {
 }
 
 dependencies {
-    include "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    compile fileTree(include: ["*.jar"], dir: "libs")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation files('libs/nashorn.jar')
+    compile files('libs/liquidbounceminusreborn-0.4')
 }
 
 shadowJar {
