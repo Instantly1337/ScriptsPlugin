@@ -7,15 +7,15 @@ import net.ccbluex.liquidbounce.plugin.Plugin
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.minusmc.scriptsplugin.features.commands.ScriptManagerCommand
 import net.minusmc.scriptsplugin.remapper.Remapper.loadSrg
+import java.io.File
 
 object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
 
     lateinit var scriptManager: ScriptManager
-    val scriptsDir = File(LiquidBounce.fileManager.dir, "scripts");
+    val scriptsDir = File(LiquidBounce.fileManager.dir, "scripts")
 
 	override fun init() {
-        if(!scriptsDir.exists())
-            scriptsDir.mkdir();
+        if(!scriptsDir.exists()) scriptsDir.mkdir()
 
 		try {
             loadSrg()
