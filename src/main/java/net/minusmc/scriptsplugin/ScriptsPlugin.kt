@@ -11,8 +11,12 @@ import net.minusmc.scriptsplugin.remapper.Remapper.loadSrg
 object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
 
     lateinit var scriptManager: ScriptManager
+    val scriptsDir = File(LiquidBounce.fileManager.dir, "scripts");
 
 	override fun init() {
+        if(!scriptsDir.exists())
+            scriptsDir.mkdir();
+
 		try {
             loadSrg()
             scriptManager = ScriptManager()
