@@ -5,7 +5,7 @@
  */
 package net.minusmc.scriptsplugin.remapper.injection.transformers.handlers
 
-import net.ccbluex.liquidbounce.script.remapper.Remapper
+import net.minusmc.scriptsplugin.remapper.Remapper
 import org.objectweb.asm.Type
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Method

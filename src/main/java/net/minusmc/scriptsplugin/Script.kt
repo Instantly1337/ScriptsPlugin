@@ -12,10 +12,10 @@ import jdk.nashorn.api.scripting.ScriptUtils
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.features.command.Command
 import net.ccbluex.liquidbounce.features.module.Module
-import net.ccbluex.liquidbounce.script.api.*
-import net.ccbluex.liquidbounce.script.api.global.Chat
-import net.ccbluex.liquidbounce.script.api.global.Item
-import net.ccbluex.liquidbounce.script.api.global.Setting
+import net.minusmc.scriptsplugin.api.*
+import net.minusmc.scriptsplugin.api.global.Chat
+import net.minusmc.scriptsplugin.api.global.Item
+import net.minusmc.scriptsplugin.api.global.Setting
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.minecraft.client.Minecraft
 import java.io.File
@@ -52,7 +52,7 @@ class Script(val scriptFile: File) {
         scriptEngine.put("mc", Minecraft.getMinecraft())
         scriptEngine.put("moduleManager", LiquidBounce.moduleManager)
         scriptEngine.put("commandManager", LiquidBounce.commandManager)
-        scriptEngine.put("scriptManager", LiquidBounce.scriptManager)
+        scriptEngine.put("scriptManager", ScriptsPlugin.scriptManager)
 
         // Global functions
         scriptEngine.put("registerScript", RegisterScript())
@@ -187,7 +187,7 @@ class Script(val scriptFile: File) {
      * @param scriptFile Path to the file to be imported.
      */
     fun import(scriptFile: String) {
-        scriptEngine.eval(File(LiquidBounce.scriptManager.scriptsFolder, scriptFile).readText())
+        scriptEngine.eval(File(ScriptsPlugin.scriptManager.scriptsFolder, scriptFile).readText())
     }
 
     /**

@@ -11,6 +11,7 @@ import net.ccbluex.liquidbounce.features.command.CommandManager
 import net.ccbluex.liquidbounce.ui.client.clickgui.ClickGui
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.ccbluex.liquidbounce.utils.misc.MiscUtils
+import net.minusmc.scriptsplugin.ScriptsPlugin
 import org.apache.commons.io.IOUtils
 import java.awt.Desktop
 import java.io.File
@@ -31,7 +32,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                         val fileName = file.name
 
                         if (fileName.endsWith(".js")) {
-                            LiquidBounce.scriptManager.importScript(file)
+                            ScriptsPlugin.scriptManager.importScript(file)
 
                             LiquidBounce.clickGui = ClickGui()
                             LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
@@ -46,7 +47,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                             while (entries.hasMoreElements()) {
                                 val entry = entries.nextElement()
                                 val entryName = entry.name
-                                val entryFile = File(LiquidBounce.scriptManager.scriptsFolder, entryName)
+                                val entryFile = File(ScriptsPlugin.scriptManager.scriptsFolder, entryName)
 
                                 if (entry.isDirectory) {
                                     entryFile.mkdir()
@@ -64,7 +65,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                                     scriptFiles.add(entryFile)
                             }
 
-                            scriptFiles.forEach { scriptFile -> LiquidBounce.scriptManager.loadScript(scriptFile) }
+                            scriptFiles.forEach { scriptFile -> ScriptsPlugin.scriptManager.loadScript(scriptFile) }
 
                             LiquidBounce.clickGui = ClickGui()
                             LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
@@ -89,7 +90,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                         }
 
                         val scriptIndex = args[2].toInt()
-                        val scripts = LiquidBounce.scriptManager.scripts
+                        val scripts = ScriptsPlugin.scriptManager.scripts
 
                         if (scriptIndex >= scripts.size) {
                             chat("Index $scriptIndex is too high.")
@@ -98,7 +99,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
 
                         val script = scripts[scriptIndex]
 
-                        LiquidBounce.scriptManager.deleteScript(script)
+                        ScriptsPlugin.scriptManager.deleteScript(script)
 
                         LiquidBounce.clickGui = ClickGui()
                         LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
@@ -117,12 +118,12 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                         LiquidBounce.commandManager = CommandManager()
                         LiquidBounce.commandManager.registerCommands()
                         LiquidBounce.isStarting = true
-                        LiquidBounce.scriptManager.disableScripts()
-                        LiquidBounce.scriptManager.unloadScripts()
+                        ScriptsPlugin.scriptManager.disableScripts()
+                        ScriptsPlugin.scriptManager.unloadScripts()
                         for(module in LiquidBounce.moduleManager.modules)
                             LiquidBounce.moduleManager.generateCommand(module)
-                        LiquidBounce.scriptManager.loadScripts()
-                        LiquidBounce.scriptManager.enableScripts()
+                        ScriptsPlugin.scriptManager.loadScripts()
+                        ScriptsPlugin.scriptManager.enableScripts()
                         LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.modulesConfig)
                         LiquidBounce.isStarting = false
                         LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.valuesConfig)
@@ -137,7 +138,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
 
                 args[1].equals("folder", true) -> {
                     try {
-                        Desktop.getDesktop().open(LiquidBounce.scriptManager.scriptsFolder)
+                        Desktop.getDesktop().open(ScriptsPlugin.scriptManager.scriptsFolder)
                         chat("Successfully opened scripts folder.")
                     } catch (t: Throwable) {
                         ClientUtils.getLogger().error("Something went wrong while trying to open your scripts folder.", t)
@@ -149,7 +150,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
             return
         }
 
-        val scriptManager = LiquidBounce.scriptManager
+        val scriptManager = ScriptsPlugin.scriptManager
 
         if (scriptManager.scripts.isNotEmpty()) {
             chat("§c§lScripts")

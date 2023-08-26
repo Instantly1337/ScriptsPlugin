@@ -1,16 +1,16 @@
-package me.toidicakhia.exampleplugin
+package net.minusmc.scriptsplugin
 
-import net.minusmc.scriptsplugin.ScriptManager
-import net.minusmc.scriptsplugin.remapper.Remapper.loadSrg
-import net.minusmc.scriptsplugin.features.commands.ScriptManagerCommand
-import net.ccbluex.liquidbounce.plugin.Plugin
-import net.ccbluex.liquidbounce.features.command.CommandManager
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.ReloadClientEvent
+import net.ccbluex.liquidbounce.LiquidBounce
+import net.ccbluex.liquidbounce.plugin.Plugin
+import net.ccbluex.liquidbounce.utils.ClientUtils
+import net.minusmc.scriptsplugin.features.commands.ScriptManagerCommand
+import net.minusmc.scriptsplugin.remapper.Remapper.loadSrg
 
-class ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
+object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
 
-    lateinit var scriptManager
+    lateinit var scriptManager: ScriptManager
 
 	override fun init() {
 		try {
@@ -23,15 +23,14 @@ class ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
         }
 	}
 
-    override fun registerCommand() {
-        CommandManager.registerCommand(ScriptManagerCommand())
+    override fun registerCommands() {
+        LiquidBounce.commandManager.registerCommand(ScriptManagerCommand())
     }
 
     @EventTarget
     fun onReloadClient(event: ReloadClientEvent) {
         scriptManager.disableScripts()
         scriptManager.unloadScripts()
-        chat("§c§lReloading scripts...")
         scriptManager.loadScripts()
         scriptManager.enableScripts()
     }

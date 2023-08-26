@@ -32,7 +32,7 @@ minecraft {
     runDir = "run"
     mappings = "stable_22"
     makeObfSourceJar = false
-    clientJvmArgs += ["-Dfml.coreMods.load=net.ccbluex.liquidbounce.injection.forge.TransformerLoader", "-Ddev-mode"]
+    clientJvmArgs += ["-Dfml.coreMods.load=net.minusmc.scriptsplugin.injection.ScriptsPluginTransformerLoader", "-Ddev-mode"]
 }
 
 configurations {
@@ -42,8 +42,8 @@ configurations {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation files('libs/nashorn.jar')
-    compile files('libs/liquidbounceminusreborn-0.4')
+    include files('libs/nashorn.jar')
+    compile files('libs/liquidbounceminusreborn-0.4.jar')
 }
 
 shadowJar {
@@ -83,7 +83,10 @@ classes.dependsOn(moveResources)
 
 jar {
     manifest.attributes(
-            "FMLAT": "liquidbounce_at.cfg"
+            "FMLCorePlugin": "net.minusmc.scriptsplugin.injection.ScriptsPluginTransformerLoader",
+            "FMLCorePluginContainsFMLMod": true,
+            "FMLAT": "liquidbounce_at.cfg",
+            "ModSide": "CLIENT",
     )
 
     enabled = false
