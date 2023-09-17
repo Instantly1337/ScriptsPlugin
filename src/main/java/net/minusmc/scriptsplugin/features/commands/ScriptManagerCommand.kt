@@ -116,6 +116,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                 args[1].equals("reload", true) -> {
                     try {
                         LiquidBounce.commandManager = CommandManager()
+                        LiquidBounce.pluginManager.registerCommands()
                         LiquidBounce.commandManager.registerCommands()
                         LiquidBounce.isStarting = true
                         ScriptsPlugin.scriptManager.disableScripts()
