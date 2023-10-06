@@ -1,12 +1,8 @@
-/*
- * LiquidBounce++ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/PlusPlusMC/LiquidBouncePlusPlus/
- */
+
 package net.minusmc.scriptsplugin
 
-import net.ccbluex.liquidbounce.LiquidBounce
-import net.ccbluex.liquidbounce.utils.ClientUtils
+import net.minusmc.minusbounce.MinusBounce
+import net.minusmc.minusbounce.utils.ClientUtils
 import java.io.File
 import java.io.FileFilter
 
@@ -14,7 +10,7 @@ class ScriptManager {
 
     val scripts = mutableListOf<Script>()
 
-    val scriptsFolder = File(LiquidBounce.fileManager.dir, "scripts")
+    val scriptsFolder = File(MinusBounce.fileManager.dir, "scripts")
     private val scriptFileExtension = ".js"
 
     /**

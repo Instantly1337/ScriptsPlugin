@@ -1,22 +1,18 @@
-/*
- * LiquidBounce++ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/PlusPlusMC/LiquidBouncePlusPlus/
- */
+
 package net.minusmc.scriptsplugin
 
 import jdk.internal.dynalink.beans.StaticClass
 import jdk.nashorn.api.scripting.JSObject
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory
 import jdk.nashorn.api.scripting.ScriptUtils
-import net.ccbluex.liquidbounce.LiquidBounce
-import net.ccbluex.liquidbounce.features.command.Command
-import net.ccbluex.liquidbounce.features.module.Module
+import net.minusmc.minusbounce.MinusBounce
+import net.minusmc.minusbounce.features.command.Command
+import net.minusmc.minusbounce.features.module.Module
 import net.minusmc.scriptsplugin.api.*
 import net.minusmc.scriptsplugin.api.global.Chat
 import net.minusmc.scriptsplugin.api.global.Item
 import net.minusmc.scriptsplugin.api.global.Setting
-import net.ccbluex.liquidbounce.utils.ClientUtils
+import net.minusmc.minusbounce.utils.ClientUtils
 import net.minecraft.client.Minecraft
 import java.io.File
 import java.util.*
@@ -50,8 +46,8 @@ class Script(val scriptFile: File) {
 
         // Global instances
         scriptEngine.put("mc", Minecraft.getMinecraft())
-        scriptEngine.put("moduleManager", LiquidBounce.moduleManager)
-        scriptEngine.put("commandManager", LiquidBounce.commandManager)
+        scriptEngine.put("moduleManager", MinusBounce.moduleManager)
+        scriptEngine.put("commandManager", MinusBounce.commandManager)
         scriptEngine.put("scriptManager", ScriptsPlugin.scriptManager)
 
         // Global functions
@@ -89,7 +85,7 @@ class Script(val scriptFile: File) {
     @Suppress("unused")
     fun registerModule(moduleObject: JSObject, callback: JSObject) {
         val module = ScriptModule(moduleObject)
-        LiquidBounce.moduleManager.registerModule(module)
+        MinusBounce.moduleManager.registerModule(module)
         registeredModules += module
         callback.call(moduleObject, module)
     }
@@ -103,7 +99,7 @@ class Script(val scriptFile: File) {
     @Suppress("unused")
     fun registerCommand(commandObject: JSObject, callback: JSObject) {
         val command = ScriptCommand(commandObject)
-        LiquidBounce.commandManager.registerCommand(command)
+        MinusBounce.commandManager.registerCommand(command)
         registeredCommands += command
         callback.call(commandObject, command)
     }
@@ -139,12 +135,12 @@ class Script(val scriptFile: File) {
     }
 
     /**
-     * Adds support for scripts made for LiquidBounce's original script API.
+     * Adds support for scripts made for MinusBounce's original script API.
      */
     private fun supportLegacyScripts() {
         if (getMagicComment("api_version") != "2") {
             ClientUtils.getLogger().info("[ScriptAPI] Running script '${scriptFile.name}' with legacy support.")
-            val legacyScript = LiquidBounce::class.java.getResource("/assets/minecraft/scriptsplugin/legacy.js").readText()
+            val legacyScript = MinusBounce::class.java.getResource("/assets/minecraft/scriptsplugin/legacy.js").readText()
             scriptEngine.eval(legacyScript)
         }
     }
@@ -175,8 +171,8 @@ class Script(val scriptFile: File) {
     fun onDisable() {
         if (!state) return
 
-        registeredModules.forEach { LiquidBounce.moduleManager.unregisterModule(it) }
-        registeredCommands.forEach { LiquidBounce.commandManager.unregisterCommand(it) }
+        registeredModules.forEach { MinusBounce.moduleManager.unregisterModule(it) }
+        registeredCommands.forEach { MinusBounce.commandManager.unregisterCommand(it) }
 
         callEvent("disable")
         state = false

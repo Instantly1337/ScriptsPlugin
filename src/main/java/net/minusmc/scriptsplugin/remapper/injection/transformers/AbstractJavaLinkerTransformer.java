@@ -1,12 +1,8 @@
-/*
- * LiquidBounce++ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/PlusPlusMC/LiquidBouncePlusPlus/
- */
+
 package net.minusmc.scriptsplugin.remapper.injection.transformers;
 
-import net.ccbluex.liquidbounce.utils.transformers.TransformersUtils;
-import net.ccbluex.liquidbounce.utils.transformers.NodeUtils;
+import net.minusmc.minusbounce.utils.transformers.TransformersUtils;
+import net.minusmc.minusbounce.utils.transformers.NodeUtils;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;

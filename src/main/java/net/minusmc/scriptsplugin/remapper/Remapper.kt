@@ -1,13 +1,9 @@
-/*
- * LiquidBounce++ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/PlusPlusMC/LiquidBouncePlusPlus/
- */
+
 package net.minusmc.scriptsplugin.remapper
 
-import net.ccbluex.liquidbounce.LiquidBounce
-import net.ccbluex.liquidbounce.utils.ClientUtils
-import net.ccbluex.liquidbounce.utils.misc.HttpUtils
+import net.minusmc.minusbounce.MinusBounce
+import net.minusmc.minusbounce.utils.ClientUtils
+import net.minusmc.minusbounce.utils.misc.HttpUtils
 import java.io.File
 
 /**
@@ -18,7 +14,7 @@ import java.io.File
 object Remapper {
 
     private const val srgName = "stable_22"
-    private val srgFile = File(LiquidBounce.fileManager.dir, "mcp-$srgName.srg")
+    private val srgFile = File(MinusBounce.fileManager.dir, "mcp-$srgName.srg")
 
     private val fields : HashMap<String, HashMap<String, String>> = hashMapOf()
     private val methods : HashMap<String, HashMap<String, String>> = hashMapOf()
@@ -33,7 +29,7 @@ object Remapper {
             srgFile.createNewFile()
 
             ClientUtils.getLogger().info("[Remapper] Downloading $srgName srg...")
-            HttpUtils.download("${LiquidBounce.CLIENT_CLOUD}/mcp-$srgName.srg", srgFile)
+            HttpUtils.download("${MinusBounce.CLIENT_CLOUD}/mcp-$srgName.srg", srgFile)
             ClientUtils.getLogger().info("[Remapper] Downloaded $srgName.")
         }
 

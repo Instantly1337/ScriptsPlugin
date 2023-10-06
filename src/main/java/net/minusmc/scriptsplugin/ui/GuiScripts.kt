@@ -1,29 +1,16 @@
-/*
- * LiquidBounce++ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/PlusPlusMC/LiquidBouncePlusPlus/
- */
+
 package net.minusmc.scriptsplugin.ui
 
-import net.ccbluex.liquidbounce.LiquidBounce
-import net.minusmc.scriptsplugin.ScriptsPlugin
-import net.ccbluex.liquidbounce.features.command.CommandManager
-import net.ccbluex.liquidbounce.ui.client.clickgui.ClickGui
-import net.ccbluex.liquidbounce.ui.font.Fonts
-import net.ccbluex.liquidbounce.utils.ClientUtils
-import net.ccbluex.liquidbounce.utils.misc.MiscUtils
+import net.minusmc.minusbounce.features.command.CommandManager
+import net.minusmc.minusbounce.ui.client.clickgui.ClickGui
+import net.minusmc.minusbounce.ui.font.Fonts
+import net.minusmc.minusbounce.utils.misc.MiscUtils
+import net.minusmc.scriptsplugin.ScriptUtils
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiSlot
-import org.apache.commons.io.IOUtils
 import org.lwjgl.input.Keyboard
 import java.awt.Color
-import java.awt.Desktop
-import java.io.File
-import java.io.FileOutputStream
-import java.net.URL
-import java.util.*
-import java.util.zip.ZipFile
 
 class GuiScripts(private val prevGui: GuiScreen) : GuiScreen() {
 
@@ -40,8 +27,6 @@ class GuiScripts(private val prevGui: GuiScreen) : GuiScreen() {
         this.buttonList.add(GuiButton(2, width - 80, j + 24 * 2, 70, 20, "Delete"))
         this.buttonList.add(GuiButton(3, width - 80, j + 24 * 3, 70, 20, "Reload"))
         this.buttonList.add(GuiButton(4, width - 80, j + 24 * 4, 70, 20, "Folder"))
-        this.buttonList.add(GuiButton(5, width - 80, j + 24 * 5, 70, 20, "Docs"))
-        this.buttonList.add(GuiButton(6, width - 80, j + 24 * 6, 70, 20, "Find Scripts"))
     }
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
@@ -56,102 +41,34 @@ class GuiScripts(private val prevGui: GuiScreen) : GuiScreen() {
     override fun actionPerformed(button: GuiButton) {
         when (button.id) {
             0 -> mc.displayGuiScreen(prevGui)
-            1 -> try {
-                val file = MiscUtils.openFileChooser() ?: return
-                val fileName = file.name
-
-                if (fileName.endsWith(".js")) {
-                    ScriptsPlugin.scriptManager.importScript(file)
-
-                    LiquidBounce.clickGui = ClickGui()
-                    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
-                    return
-                } else if (fileName.endsWith(".zip")) {
-                    val zipFile = ZipFile(file)
-                    val entries = zipFile.entries()
-                    val scriptFiles = ArrayList<File>()
-
-                    while (entries.hasMoreElements()) {
-                        val entry = entries.nextElement()
-                        val entryName = entry.name
-                        val entryFile = File(ScriptsPlugin.scriptManager.scriptsFolder, entryName)
-
-                        if (entry.isDirectory) {
-                            entryFile.mkdir()
-                            continue
-                        }
-
-                        val fileStream = zipFile.getInputStream(entry)
-                        val fileOutputStream = FileOutputStream(entryFile)
-
-                        IOUtils.copy(fileStream, fileOutputStream)
-                        fileOutputStream.close()
-                        fileStream.close()
-
-                        if (!entryName.contains("/"))
-                            scriptFiles.add(entryFile)
-                    }
-
-                    scriptFiles.forEach { scriptFile -> ScriptsPlugin.scriptManager.loadScript(scriptFile) }
-
-                    LiquidBounce.clickGui = ClickGui()
-                    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
-                    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.hudConfig)
-                    return
+            1 -> {
+                val code = ScriptUtils.doImport()
+                when (code) {
+                    404 -> MiscUtils.showErrorPopup("Wrong file extension.", "The file extension has to be .js or .zip")
+                    500 -> MiscUtils.showErrorPopup("Error", "Error while importing script.")
                 }
-
-                MiscUtils.showErrorPopup("Wrong file extension.", "The file extension has to be .js or .zip")
-            } catch (t: Throwable) {
-                ClientUtils.getLogger().error("Something went wrong while importing a script.", t)
-                MiscUtils.showErrorPopup(t.javaClass.name, t.message)
             }
 
-            2 -> try {
-                if (list.getSelectedSlot() != -1) {
-                    val script = ScriptsPlugin.scriptManager.scripts[list.getSelectedSlot()]
-
-                    ScriptsPlugin.scriptManager.deleteScript(script)
-
-                    LiquidBounce.clickGui = ClickGui()
-                    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
-                    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.hudConfig)
+            2 -> {
+                if (list.getSelectedSlot() == -1) return
+                val code = ScriptUtils.doDelete(list.getSelectedSlot())
+                when (code) {
+                    500 -> MiscUtils.showErrorPopup("Error", "Error while deleting script.")
                 }
-            } catch (t: Throwable) {
-                ClientUtils.getLogger().error("Something went wrong while deleting a script.", t)
-                MiscUtils.showErrorPopup(t.javaClass.name, t.message)
             }
-            3 -> try {
-                LiquidBounce.commandManager = CommandManager()
-                LiquidBounce.commandManager.registerCommands()
-                LiquidBounce.isStarting = true
-                ScriptsPlugin.scriptManager.disableScripts()
-                ScriptsPlugin.scriptManager.unloadScripts()
-                for(module in LiquidBounce.moduleManager.modules)
-                    LiquidBounce.moduleManager.generateCommand(module)
-                ScriptsPlugin.scriptManager.loadScripts()
-                ScriptsPlugin.scriptManager.enableScripts()
-                LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.modulesConfig)
-                LiquidBounce.isStarting = false
-                LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.valuesConfig)
-                LiquidBounce.clickGui = ClickGui()
-                LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig)
-            } catch (t: Throwable) {
-                ClientUtils.getLogger().error("Something went wrong while reloading all scripts.", t)
-                MiscUtils.showErrorPopup(t.javaClass.name, t.message)
+            3 -> {
+                val code = ScriptUtils.doReload()
+                when (code) {
+                    500 -> MiscUtils.showErrorPopup("Error", "Error while reloading all script.")
+                }
             }
-            4 -> try {
-                Desktop.getDesktop().open(ScriptsPlugin.scriptManager.scriptsFolder)
-            } catch (t: Throwable) {
-                ClientUtils.getLogger().error("Something went wrong while trying to open your scripts folder.", t)
-                MiscUtils.showErrorPopup(t.javaClass.name, t.message)
-            }
-            5 -> try {
-                Desktop.getDesktop().browse(URL("https://liquidbounce.net/docs/ScriptAPI/Getting%20Started").toURI())
-            } catch (ignored: Exception) { }
 
-            6 -> try {
-                Desktop.getDesktop().browse(URL("https://forum.ccbluex.net/viewforum.php?id=16").toURI())
-            } catch (ignored: Exception) { }
+            4 -> {
+                val code = ScriptUtils.doOpenFolder()
+                when (code) {
+                    500 -> MiscUtils.showErrorPopup("Error", "Error while opening script folder.")
+                }
+            }
         }
     }
 

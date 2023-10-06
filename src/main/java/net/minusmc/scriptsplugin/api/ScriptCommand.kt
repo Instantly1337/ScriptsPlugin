@@ -1,14 +1,10 @@
-/*
- * LiquidBounce++ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/PlusPlusMC/LiquidBouncePlusPlus/
- */
+
 package net.minusmc.scriptsplugin.api
 
 import jdk.nashorn.api.scripting.JSObject
 import jdk.nashorn.api.scripting.ScriptUtils
-import net.ccbluex.liquidbounce.features.command.Command
-import net.ccbluex.liquidbounce.utils.ClientUtils
+import net.minusmc.minusbounce.features.command.Command
+import net.minusmc.minusbounce.utils.ClientUtils
 
 @Suppress("UNCHECKED_CAST", "unused")
 class ScriptCommand(private val commandObject: JSObject) : Command(commandObject.getMember("name") as String,
