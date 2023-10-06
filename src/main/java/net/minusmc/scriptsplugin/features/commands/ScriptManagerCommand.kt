@@ -36,7 +36,7 @@ class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {
                     chatSyntax("scriptmanager delete <index>")
                 } else {
                     val index = args[2].toInt()
-                    val code = ScriptUtils.doDelete()
+                    val code = ScriptUtils.doDelete(index)
                     when (code) {
                         200 -> chat("Successfully deleted script.")
                         403 -> chat("$index is not number.")

@@ -2,10 +2,10 @@
 package net.minusmc.scriptsplugin.ui
 
 import net.minusmc.minusbounce.features.command.CommandManager
-import net.minusmc.minusbounce.ui.client.clickgui.ClickGui
 import net.minusmc.minusbounce.ui.font.Fonts
 import net.minusmc.minusbounce.utils.misc.MiscUtils
 import net.minusmc.scriptsplugin.ScriptUtils
+import net.minusmc.scriptsplugin.ScriptsPlugin
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiSlot
