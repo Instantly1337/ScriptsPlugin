@@ -4,6 +4,7 @@ package net.minusmc.scriptsplugin.features.commands
 import net.minusmc.minusbounce.features.command.Command
 import net.minusmc.minusbounce.features.command.CommandManager
 import net.minusmc.minusbounce.ui.client.clickgui.ClickGui
+import net.minusmc.scriptsplugin.ScriptsPlugin
 import net.minusmc.scriptsplugin.ScriptUtils
 
 class ScriptManagerCommand : Command("scriptmanager", arrayOf("scripts")) {

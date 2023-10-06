@@ -1,6 +1,10 @@
 package net.minusmc.scriptsplugin
 
 import net.minusmc.minusbounce.MinusBounce
+import net.minusmc.minusbounce.features.command.CommandManager
+import net.minusmc.minusbounce.utils.misc.MiscUtils
+import net.minusmc.minusbounce.utils.ClientUtils
+import net.minusmc.minusbounce.ui.client.clickgui.ClickGui
 import net.minusmc.scriptsplugin.ScriptsPlugin
 import java.awt.Desktop
 import java.util.*
@@ -8,7 +12,7 @@ import java.util.*
 object ScriptUtils {
 	fun doImport(): Int {
         try {
-            val file = MiscUtils.openFileChooser() ?: return
+            val file = MiscUtils.openFileChooser() ?: return 403
             if (file.name.endsWith(".js")) {
                 ScriptsPlugin.scriptManager.importScript(file)
 
