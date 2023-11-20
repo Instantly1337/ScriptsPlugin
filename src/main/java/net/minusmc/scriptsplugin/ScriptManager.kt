@@ -33,6 +33,7 @@ class ScriptManager {
     /**
      * Loads a script from a file.
      */
+
     fun loadScript(scriptFile : File) {
         try {
             scripts.add(Script(scriptFile))

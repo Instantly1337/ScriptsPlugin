@@ -23,7 +23,7 @@ import kotlin.collections.HashMap
 class Script(val scriptFile: File) {
 
     private val scriptEngine: ScriptEngine
-    private val scriptText = scriptFile.readText()
+    private var scriptText = scriptFile.readText()
 
     // Script information
     lateinit var scriptName: String
@@ -35,7 +35,14 @@ class Script(val scriptFile: File) {
     private val registeredModules = mutableListOf<Module>()
     private val registeredCommands = mutableListOf<Command>()
 
+    private var apiType = ""
+
     init {
+        recognizeAPI()
+
+        scriptText.replace("Java\.type\('.+net\.ccbluex\.liquidbounce".toRegex(), "Java.type('net.minusmc.minusbounce")
+        scriptText.replace("Java\.type\(\".+net\.ccbluex\.liquidbounce".toRegex(), "Java.type(\"net.minusmc.minusbounce")
+
         val engineFlags = getMagicComment("engine_flags")?.split(",")?.toTypedArray() ?: emptyArray()
         scriptEngine = NashornScriptEngineFactory().getScriptEngine(*engineFlags)
 
@@ -53,11 +60,27 @@ class Script(val scriptFile: File) {
         // Global functions
         scriptEngine.put("registerScript", RegisterScript())
 
-        supportLegacyScripts()
+        if (apiType.equals("corelib", true)) {
+            supportCoreLibScripts()
+        } else if (apiType.equals("legacy", true)) {
+            supportLegacyScripts()
+        }
 
         scriptEngine.eval(scriptText)
 
         callEvent("load")
+    }
+
+    /**
+     * Recognize API Scripts
+     */
+
+    private fun recognizeAPI() {
+        if (scriptText.containsMatchIn("registerScript".toRegex())) {
+            apiType = "corelib"
+        } else if (scriptText.contains("var scriptName=".toRegex())) {
+            apiType = "legacy"
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -135,14 +158,20 @@ class Script(val scriptFile: File) {
     }
 
     /**
-     * Adds support for scripts made for MinusBounce's original script API.
+     * Adds support for scripts made for LiquidBounce's original script API.
      */
     private fun supportLegacyScripts() {
         if (getMagicComment("api_version") != "2") {
             ClientUtils.getLogger().info("[ScriptAPI] Running script '${scriptFile.name}' with legacy support.")
-            val legacyScript = MinusBounce::class.java.getResource("/assets/minecraft/scriptsplugin/legacy.js").readText()
+            val legacyScript = MinusBounce::class.java.getResource("/assets/minecraft/scriptsplugin/legacyapi.js").readText()
             scriptEngine.eval(legacyScript)
         }
+    }
+
+    private fun supportCoreLibScripts() {
+        ClientUtils.getLogger().info("[ScriptAPI] Running script '${scriptFile.name}' with CoreLibAPI")
+        val legacyScript = MinusBounce::class.java.getResource("/assets/minecraft/scriptsplugin/corelibapi.js").readText()
+        scriptEngine.eval(legacyScript)
     }
 
     /**

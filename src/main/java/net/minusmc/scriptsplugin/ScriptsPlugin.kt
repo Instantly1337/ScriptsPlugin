@@ -7,6 +7,7 @@ import net.minusmc.minusbounce.plugin.Plugin
 import net.minusmc.minusbounce.utils.ClientUtils
 import net.minusmc.scriptsplugin.features.commands.ScriptManagerCommand
 import net.minusmc.scriptsplugin.remapper.Remapper.loadSrg
+import net.minusmc.scriptsplugin.ui.GuiScripts
 import java.io.File
 
 object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
@@ -15,6 +16,7 @@ object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
     val scriptsDir = File(MinusBounce.fileManager.dir, "scripts")
 
 	override fun init() {
+        MinusBounce.mainMenuButton.add("Scripts", GuiScripts::class.java)
         if(!scriptsDir.exists()) scriptsDir.mkdir()
 
 		try {

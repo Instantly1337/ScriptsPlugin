@@ -43,7 +43,7 @@ configurations {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     include files('libs/nashorn.jar')
-    compile files('libs/liquidbounceminusreborn-0.4.jar')
+    compile "com.github.MinusMCNetwork:MinusBounce:4e3db47037"
 }
 
 shadowJar {
