@@ -40,8 +40,8 @@ class Script(val scriptFile: File) {
     init {
         recognizeAPI()
 
-        scriptText.replace("Java\.type\('.+net\.ccbluex\.liquidbounce".toRegex(), "Java.type('net.minusmc.minusbounce")
-        scriptText.replace("Java\.type\(\".+net\.ccbluex\.liquidbounce".toRegex(), "Java.type(\"net.minusmc.minusbounce")
+        scriptText.replace("Java\\.type\\('.+net\\.ccbluex\\.liquidbounce".toRegex(), "Java.type('net.minusmc.minusbounce")
+        scriptText.replace("Java\\.type\\(\".+net\\.ccbluex\\.liquidbounce".toRegex(), "Java.type(\"net.minusmc.minusbounce")
 
         val engineFlags = getMagicComment("engine_flags")?.split(",")?.toTypedArray() ?: emptyArray()
         scriptEngine = NashornScriptEngineFactory().getScriptEngine(*engineFlags)
@@ -76,7 +76,7 @@ class Script(val scriptFile: File) {
      */
 
     private fun recognizeAPI() {
-        if (scriptText.containsMatchIn("registerScript".toRegex())) {
+        if (scriptText.contains("registerScript".toRegex())) {
             apiType = "corelib"
         } else if (scriptText.contains("var scriptName=".toRegex())) {
             apiType = "legacy"
@@ -162,14 +162,14 @@ class Script(val scriptFile: File) {
      */
     private fun supportLegacyScripts() {
         if (getMagicComment("api_version") != "2") {
-            ClientUtils.getLogger().info("[ScriptAPI] Running script '${scriptFile.name}' with legacy support.")
+            ClientUtils.logger.info("[ScriptAPI] Running script '${scriptFile.name}' with legacy support.")
             val legacyScript = MinusBounce::class.java.getResource("/assets/minecraft/scriptsplugin/legacyapi.js").readText()
             scriptEngine.eval(legacyScript)
         }
     }
 
     private fun supportCoreLibScripts() {
-        ClientUtils.getLogger().info("[ScriptAPI] Running script '${scriptFile.name}' with CoreLibAPI")
+        ClientUtils.logger.info("[ScriptAPI] Running script '${scriptFile.name}' with CoreLibAPI")
         val legacyScript = MinusBounce::class.java.getResource("/assets/minecraft/scriptsplugin/corelibapi.js").readText()
         scriptEngine.eval(legacyScript)
     }
@@ -223,7 +223,7 @@ class Script(val scriptFile: File) {
         try {
             events[eventName]?.call(null)
         } catch (throwable: Throwable) {
-            ClientUtils.getLogger().error("[ScriptAPI] Exception in script '$scriptName'!", throwable)
+            ClientUtils.logger.error("[ScriptAPI] Exception in script '$scriptName'!", throwable)
         }
     }
 }

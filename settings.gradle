@@ -21,4 +21,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'ExamplePlugin'
+rootProject.name = 'ScriptsPlugin'

@@ -23,7 +23,7 @@ object ScriptUtils {
             }
             return 404
         } catch (t: Throwable) {
-            ClientUtils.getLogger().error("Something went wrong while importing a script.", t)
+            ClientUtils.logger.error("Something went wrong while importing a script.", t)
             return 500
         }
         return 0
@@ -46,7 +46,7 @@ object ScriptUtils {
         } catch (numberFormat: NumberFormatException) {
             return 403
         } catch (t: Throwable) {
-            ClientUtils.getLogger().error("Something went wrong while deleting a script.", t)
+            ClientUtils.logger.error("Something went wrong while deleting a script.", t)
             return 500
         }
         return 0
@@ -72,7 +72,7 @@ object ScriptUtils {
             MinusBounce.moduleManager.initModeListValues()
             return 200
         } catch (t: Throwable) {
-            ClientUtils.getLogger().error("Something went wrong while reloading all scripts.", t)
+            ClientUtils.logger.error("Something went wrong while reloading all scripts.", t)
             return 500
         }
         return 0
@@ -83,7 +83,7 @@ object ScriptUtils {
             Desktop.getDesktop().open(ScriptsPlugin.scriptManager.scriptsFolder)
             return 200
         } catch (t: Throwable) {
-            ClientUtils.getLogger().error("Something went wrong while trying to open your scripts folder.", t)
+            ClientUtils.logger.error("Something went wrong while trying to open your scripts folder.", t)
         	return 500
         }
         return 0

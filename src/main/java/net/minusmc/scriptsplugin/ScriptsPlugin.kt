@@ -4,19 +4,20 @@ import net.minusmc.minusbounce.event.EventTarget
 import net.minusmc.minusbounce.event.ReloadClientEvent
 import net.minusmc.minusbounce.MinusBounce
 import net.minusmc.minusbounce.plugin.Plugin
+import net.minusmc.minusbounce.plugin.PluginAPIVersion
 import net.minusmc.minusbounce.utils.ClientUtils
 import net.minusmc.scriptsplugin.features.commands.ScriptManagerCommand
 import net.minusmc.scriptsplugin.remapper.Remapper.loadSrg
 import net.minusmc.scriptsplugin.ui.GuiScripts
 import java.io.File
 
-object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
+object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev", minApiVersion = PluginAPIVersion.VER_01) {
 
     lateinit var scriptManager: ScriptManager
-    val scriptsDir = File(MinusBounce.fileManager.dir, "scripts")
+    private val scriptsDir = File(MinusBounce.fileManager.dir, "scripts")
 
 	override fun init() {
-        MinusBounce.mainMenuButton.add("Scripts", GuiScripts::class.java)
+        MinusBounce.mainMenuButton["Scripts"] = GuiScripts::class.java
         if(!scriptsDir.exists()) scriptsDir.mkdir()
 
 		try {
@@ -25,7 +26,7 @@ object ScriptsPlugin: Plugin(name = "ScriptsPlugin", version = "dev") {
             scriptManager.loadScripts()
             scriptManager.enableScripts()
         } catch (throwable: Throwable) {
-            ClientUtils.getLogger().error("Failed to load scripts.", throwable)
+            ClientUtils.logger.error("Failed to load scripts.", throwable)
         }
 	}
 
