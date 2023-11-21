@@ -19,7 +19,7 @@ script.on("disable", function() {
 script.on("load", function() {
     try {
         script.setScriptName(scriptName);
-        script.setScriptVersion(scriptVersion.toString() + " §7[§4MinusBounce API§7]");
+        script.setScriptVersion(scriptVersion.toString() + " §7[§4Legacy API§7]");
         script.setScriptAuthors([scriptAuthor]);
     } catch (err) {}
 
