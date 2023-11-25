@@ -54,20 +54,6 @@ Core.registerModule = function (m) {
         m.onClickBlock && module.on("clickBlock", m.onClickBlock.bind(m));
         m.onStepConfirm && module.on("stepConfirm", m.onStepConfirm.bind(m));
         m.onValueChanged && module.on("valueChanged", m.onValueChanged.bind(m));
-        m.onClickGuiLoaded && module.on("clickGuiLoaded", m.onClickGuiLoaded.bind(m));
-
-        /*----------------------*/
-        /* Dynamic Values™ core */
-        /*----------------------*/
-
-        ["clickGuiOpen", "clickGuiClosed"].forEach(function (event, i) {
-            var eventTarget = m["on" + event[0].toUpperCase() + event.slice(1)];
-            (eventTarget || dynamicValues) && module.on(event, function () {
-                eventTarget && eventTarget.call(m);
-                dynamicValues && Core.dynamicValues.update(m, i);
-            });
-        });
-
         //Built-in shutdown event is only called when module is enabled, that could lead into dynamic values not getting saved. Has to be hooked artificially.
         dynamicValues && hookEvent(ClientShutdownEvent, function () Core.dynamicValues.update(m, true));
 
@@ -479,7 +465,7 @@ function TextEditor(file) file instanceof File && (
 
 Core.dynamicValues = {
     update: function (coreModule, forceAll) {
-        if (forceAll || mc.currentScreen instanceof ClickGui)
+        if (forceAll || mc.currentScreen instanceof StyleMode)
             setValues(coreModule.module, coreModule.values.map(
                 function (v) {
                     var handler = Core.dynamicValues[v];
@@ -753,7 +739,7 @@ FileManager = Java.type("net.minusmc.minusbounce.file.FileManager");
 Module = Java.type("net.minusmc.minusbounce.features.module.Module");
 Command = Java.type("net.minusmc.minusbounce.features.command.Command");
 Remapper = Java.type("net.minusmc.scriptsplugin.remapper.Remapper");
-ClickGui = Java.type("net.minusmc.minusbounce.ui.client.clickgui.ClickGui");
+StyleMode = Java.type("net.minusmc.minusbounce.ui.client.clickgui.styles.StyleMode")
 ScriptModule = Java.type("net.minusmc.scriptsplugin.api.ScriptModule");
 ValuesConfig = Java.type("net.minusmc.minusbounce.file.configs.ValuesConfig");
 ModuleCategory = Java.type("net.minusmc.minusbounce.features.module.ModuleCategory");
@@ -787,21 +773,6 @@ Core.artificialEvents = {
 /*-------------*/
 /* Event hooks */
 /*-------------*/
-
-Core.hookClickGui = function () {
-    LiquidBounce.clickGui = new (Java.extend(ClickGui))() {
-        func_73866_w_: function () {
-            callEvent("clickGuiOpen");
-        },
-        func_146281_b: function () {
-            callEvent("clickGuiClosed");
-            LiquidBounce.fileManager.saveConfig(LiquidBounce.fileManager.clickGuiConfig);
-        }
-    }
-    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig);
-    if (mc.currentScreen instanceof ClickGui) ClickGUIModule.onEnable();
-    callEvent("clickGuiLoaded");
-};
 
 Core.hookFileManager = function () {
     Core.ignoreValueChange = false;
@@ -864,7 +835,6 @@ Core.hookReloader = function () {
                             scriptManager.enableScripts();
 
                             LiquidBounce.fileManager.loadConfigs(LiquidBounce.fileManager.modulesConfig, LiquidBounce.fileManager.valuesConfig);
-                            Core.hookClickGui();
                             LiquidBounce.INSTANCE.setStarting(false);
 
                             if (scriptManager.scripts.length) {
@@ -873,10 +843,6 @@ Core.hookReloader = function () {
 
                                 mc.thePlayer.addChatMessage(component);
                             }
-                            break
-                        case "clickgui":
-                            Core.hookClickGui();
-                            print("§2▏ §a§lReloaded§a ClickGUI in §9" + (System.currentTimeMillis() - startMs) + "ms§2!");
                             break
                         case "fonts":
                             Fonts.loadFonts();
@@ -946,7 +912,6 @@ Core.hookReloader = function () {
                             newScript.onEnable();
 
                             LiquidBounce.fileManager.loadConfigs(LiquidBounce.fileManager.modulesConfig, LiquidBounce.fileManager.valuesConfig);
-                            Core.hookClickGui();
                             LiquidBounce.INSTANCE.setStarting(false);
 
                             print("§2▏ §a§l" + (importing ? "L" : "Rel") + "oaded §ascript „§2" + newScript.scriptName + "§a“ in §9" + (System.currentTimeMillis() - startMs) + "ms§2!");
