@@ -1,6 +1,8 @@
 package net.minusmc.scriptsplugin
 
 import net.minusmc.minusbounce.MinusBounce
+import net.minusmc.minusbounce.event.ReloadClientEvent
+import net.minusmc.minusbounce.features.module.modules.client.ClickGUI
 import net.minusmc.minusbounce.features.command.CommandManager
 import net.minusmc.minusbounce.utils.misc.MiscUtils
 import net.minusmc.minusbounce.utils.ClientUtils
