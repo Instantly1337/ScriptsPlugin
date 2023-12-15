@@ -4,7 +4,6 @@ import net.minusmc.minusbounce.MinusBounce
 import net.minusmc.minusbounce.features.command.CommandManager
 import net.minusmc.minusbounce.utils.misc.MiscUtils
 import net.minusmc.minusbounce.utils.ClientUtils
-import net.minusmc.minusbounce.ui.client.clickgui.ClickGui
 import net.minusmc.scriptsplugin.ScriptsPlugin
 import java.awt.Desktop
 import java.util.*
@@ -16,7 +15,7 @@ object ScriptUtils {
             if (file.name.endsWith(".js")) {
                 ScriptsPlugin.scriptManager.importScript(file)
 
-                MinusBounce.clickGui = ClickGui()
+                MinusBounce.moduleManager[ClickGUI::class.java]!!.style::class.java.newInstance()
                 MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.clickGuiConfig)
 
                 return 200
@@ -39,7 +38,7 @@ object ScriptUtils {
 
             ScriptsPlugin.scriptManager.deleteScript(script)
 
-            MinusBounce.clickGui = ClickGui()
+            MinusBounce.moduleManager[ClickGUI::class.java]!!.style::class.java.newInstance()
             MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.clickGuiConfig)
             MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.hudConfig)
             return 200
@@ -67,7 +66,11 @@ object ScriptUtils {
             MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.modulesConfig)
             MinusBounce.isStarting = false
             MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.valuesConfig)
-            MinusBounce.clickGui = ClickGui()
+
+            MinusBounce.eventManager.callEvent(ReloadClientEvent())
+            MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.hudConfig)
+
+            MinusBounce.moduleManager[ClickGUI::class.java]!!.style::class.java.newInstance()
             MinusBounce.fileManager.loadConfig(MinusBounce.fileManager.clickGuiConfig)
             MinusBounce.moduleManager.initModeListValues()
             return 200

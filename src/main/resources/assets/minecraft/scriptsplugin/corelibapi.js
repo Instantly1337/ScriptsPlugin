@@ -774,6 +774,13 @@ Core.artificialEvents = {
 /* Event hooks */
 /*-------------*/
 
+Core.hookClickGui = function () {
+    LiquidBounce.moduleManager.getModule(ClickGUI.class).getStyle().class.newInstance()
+    LiquidBounce.fileManager.loadConfig(LiquidBounce.fileManager.clickGuiConfig);
+    if (mc.currentScreen instanceof StyleMode) ClickGUIModule.onEnable();
+    callEvent("clickGuiLoaded");
+};
+
 Core.hookFileManager = function () {
     Core.ignoreValueChange = false;
     LiquidBounce.fileManager = new (Java.extend(FileManager))() {
