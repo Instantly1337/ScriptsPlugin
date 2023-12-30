@@ -4,6 +4,7 @@ package net.minusmc.scriptsplugin.remapper
 import net.minusmc.minusbounce.MinusBounce
 import net.minusmc.minusbounce.utils.ClientUtils
 import net.minusmc.minusbounce.utils.misc.HttpUtils
+import org.apache.commons.io.FileUtils
 import java.io.File
 
 /**
@@ -23,15 +24,10 @@ object Remapper {
      * Load srg
      */
     fun loadSrg() {
-        // Check if srg file is already downloaded
-        if (srgFile.length() == 0L) {
-            // Download srg file
-            srgFile.createNewFile()
 
-            ClientUtils.logger.info("[Remapper] Downloading $srgName srg...")
-            HttpUtils.download("${MinusBounce.CLIENT_CLOUD}/mcp-$srgName.srg", srgFile)
-            ClientUtils.logger.info("[Remapper] Downloaded $srgName.")
-        }
+        // Copy file from resources to outside
+        val source = this::class.java.getResource("/assets/minecraft/scriptsplugin/mcp-stable_22.srg")
+        FileUtils.copyURLToFile(source, srgFile)
 
         // Load srg
         ClientUtils.logger.info("[Remapper] Loading srg...")

@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "scriptsplugin",
+    "name": "ScriptsPlugin",
+    "description": "",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["toidicakhia", "MinusMC"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
